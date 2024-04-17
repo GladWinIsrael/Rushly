@@ -27,22 +27,6 @@ class BillingProductAdapter :
                     billingProduct.product.price,
                     billingProduct.product.offerPercentage
                 )
-                if (billingProduct.selectedColor != null) {
-                    imageCartProductColor.setImageDrawable(
-                        ColorDrawable(billingProduct.selectedColor)
-                    )
-                    imageCartProductColor.visibility = ViewGroup.VISIBLE
-                } else {
-                    imageCartProductColor.visibility = ViewGroup.GONE
-                }
-                if (billingProduct.selectedSize != null) {
-                    tvCartProductSize.text = billingProduct.selectedSize
-                    tvCartProductSize.visibility = ViewGroup.VISIBLE
-                    imageCartProductSize.visibility = ViewGroup.VISIBLE
-                } else {
-                    tvCartProductSize.visibility = ViewGroup.GONE
-                    imageCartProductSize.visibility = ViewGroup.GONE
-                }
             }
         }
     }

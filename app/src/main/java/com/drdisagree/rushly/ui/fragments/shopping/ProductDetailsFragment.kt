@@ -18,8 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.drdisagree.rushly.R
 import com.drdisagree.rushly.data.CartProduct
 import com.drdisagree.rushly.databinding.FragmentProductDetailsBinding
-import com.drdisagree.rushly.ui.adapters.ColorsAdapter
-import com.drdisagree.rushly.ui.adapters.SizesAdapter
 import com.drdisagree.rushly.ui.adapters.ViewPagerImagesAdapter
 import com.drdisagree.rushly.ui.viewmodels.DetailsViewModel
 import com.drdisagree.rushly.utils.Resource
@@ -33,10 +31,6 @@ class ProductDetailsFragment : Fragment() {
     private lateinit var binding: FragmentProductDetailsBinding
     private val args by navArgs<ProductDetailsFragmentArgs>()
     private val imageAdapter by lazy { ViewPagerImagesAdapter() }
-    private val sizeAdapter by lazy { SizesAdapter() }
-    private val colorAdapter by lazy { ColorsAdapter() }
-    private var selectedColor: Int? = null
-    private var selectedSize: String? = null
     private val viewModel by viewModels<DetailsViewModel>()
 
     override fun onCreateView(
@@ -52,17 +46,8 @@ class ProductDetailsFragment : Fragment() {
 
         val product = args.product
 
-        setupSizesRv()
-        setupColorsRv()
         setupViewPager()
 
-        sizeAdapter.onItemClick = {
-            selectedSize = it
-        }
-
-        colorAdapter.onItemClick = {
-            selectedColor = it
-        }
 
         binding.apply {
             tvProductName.text = product.name
@@ -91,43 +76,15 @@ class ProductDetailsFragment : Fragment() {
                 findNavController().navigateUp()
             }
 
-            if (product.colors.isNullOrEmpty()) {
-                linearColors.visibility = View.GONE
-            }
-
-            if (product.sizes.isNullOrEmpty()) {
-                linearSizes.visibility = View.GONE
-            }
-
-            if (linearColors.visibility == View.GONE && linearSizes.visibility == View.GONE) {
-                linearProductPref.visibility = View.GONE
-            }
 
             buttonAddToCart.setOnClickListener {
-                if (selectedColor == null && !product.colors.isNullOrEmpty()) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Please select a color",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
 
-                if (selectedSize == null && !product.sizes.isNullOrEmpty()) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Please select a size",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
 
                 viewModel.addOrUpdateProductInCart(
                     CartProduct(
                         product,
                         1,
-                        selectedColor,
-                        selectedSize
+
                     )
                 )
             }
@@ -169,12 +126,7 @@ class ProductDetailsFragment : Fragment() {
         }
 
         imageAdapter.differ.submitList(product.images)
-        product.colors?.let {
-            colorAdapter.differ.submitList(it)
-        }
-        product.sizes?.let {
-            sizeAdapter.differ.submitList(it)
-        }
+
     }
 
     private fun setupViewPager() {
@@ -188,19 +140,5 @@ class ProductDetailsFragment : Fragment() {
         }
     }
 
-    private fun setupColorsRv() {
-        binding.rvColors.apply {
-            adapter = colorAdapter
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        }
-    }
 
-    private fun setupSizesRv() {
-        binding.rvSizes.apply {
-            adapter = sizeAdapter
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        }
-    }
 }

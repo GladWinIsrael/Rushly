@@ -28,22 +28,6 @@ class CartProductsAdapter :
                     cartProduct.product.price,
                     cartProduct.product.offerPercentage
                 )
-                if (cartProduct.selectedColor != null) {
-                    imageCartProductColor.setImageDrawable(
-                        ColorDrawable(cartProduct.selectedColor)
-                    )
-                    imageCartProductColor.visibility = ViewGroup.VISIBLE
-                } else {
-                    imageCartProductColor.visibility = ViewGroup.GONE
-                }
-                if (cartProduct.selectedSize != null) {
-                    tvCartProductSize.text = cartProduct.selectedSize
-                    tvCartProductSize.visibility = ViewGroup.VISIBLE
-                    imageCartProductSize.visibility = ViewGroup.VISIBLE
-                } else {
-                    tvCartProductSize.visibility = ViewGroup.GONE
-                    imageCartProductSize.visibility = ViewGroup.GONE
-                }
             }
         }
     }

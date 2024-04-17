@@ -40,7 +40,6 @@ class NewProductFragment : Fragment() {
     private lateinit var binding: FragmentNewProductBinding
     private val viewModel by viewModels<NewProductViewModel>()
     private var selectedImages = mutableListOf<Uri>()
-    private var selectedColors = mutableListOf<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,26 +64,7 @@ class NewProductFragment : Fragment() {
                 findNavController().navigateUp()
             }
 
-            layoutColorPicker.setOnClickListener {
-                ColorPickerDialog.Builder(requireContext())
-                    .setTitle("Product color")
-                    .setPositiveButton("Select", object : ColorEnvelopeListener {
-                        override fun onColorSelected(envelope: ColorEnvelope?, fromUser: Boolean) {
-                            envelope?.let {
-                                selectedColors.add(it.color)
-                                updateColors()
-                            }
-                        }
-                    })
-                    .setNegativeButton("Cancel") { colorPicker, _ ->
-                        colorPicker.dismiss()
-                    }
-                    .attachAlphaSlideBar(false)
-                    .show()
-            }
-
             layoutImagePicker.setOnLongClickListener {
-                selectedColors.clear()
                 tvSelectedColors.text = getString(R.string.none)
                 true
             }
@@ -139,7 +119,6 @@ class NewProductFragment : Fragment() {
                 val price = edPrice.text.toString().trim()
                 val offerPercentage = edOfferPercentage.text.toString().trim()
                 val description = edDescription.text.toString().trim()
-                val sizes = getSizesAsList(edSizes.text.toString().trim())
                 val special = checkBoxSpecialProduct.isChecked
                 val imagesByteArrays = getImagesByteArrays()
 
@@ -150,8 +129,6 @@ class NewProductFragment : Fragment() {
                     price = price,
                     offerPercentage = if (offerPercentage.isEmpty()) null else offerPercentage.toFloat(),
                     description = description.ifEmpty { null },
-                    colors = selectedColors.toList(),
-                    sizes = sizes,
                     special = special,
                     imagesByteArray = imagesByteArrays
                 )
@@ -245,21 +222,6 @@ class NewProductFragment : Fragment() {
         return if (sizesStr.isEmpty()) null else sizesStr.split(",")
     }
 
-    private fun updateColors() {
-        var colors = ""
-        var firstItem = true
-
-        selectedColors.forEach {
-            colors = if (firstItem)
-                "#${Integer.toHexString(it).substring(2)}"
-            else
-                "$colors, #${Integer.toHexString(it).substring(2)}"
-
-            firstItem = false
-        }
-
-        binding.tvSelectedColors.text = colors.uppercase(Locale.ROOT)
-    }
 
     private fun updateImages() {
         val count = selectedImages.size
@@ -295,11 +257,8 @@ class NewProductFragment : Fragment() {
             edDescription.text.clear()
             edPrice.text.clear()
             edOfferPercentage.text.clear()
-            edSizes.text.clear()
             checkBoxSpecialProduct.isChecked = false
-            tvSelectedColors.text = getString(R.string.none)
             tvSelectedImages.text = getString(R.string.none)
-            selectedColors.clear()
             selectedImages.clear()
         }
     }
