@@ -160,8 +160,6 @@ class NewProductViewModel @Inject constructor(
                     price = price,
                     offerPercentage = offerPercentage,
                     description = description,
-                    colors = colors,
-                    sizes = sizes,
                     images = images,
                     special = special
                 )

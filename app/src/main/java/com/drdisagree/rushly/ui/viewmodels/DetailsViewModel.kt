@@ -34,8 +34,6 @@ class DetailsViewModel @Inject constructor(
             .document(firebaseAuth.uid!!)
             .collection(CART_COLLECTION)
             .whereEqualTo("product.id", cartProduct.product.id)
-            .whereEqualTo("selectedColor", cartProduct.selectedColor)
-            .whereEqualTo("selectedSize", cartProduct.selectedSize)
             .get()
             .addOnSuccessListener { it ->
                 it.documents.let {
